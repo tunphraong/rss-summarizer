@@ -5,11 +5,12 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { ExternalLink, Trash2, Plus } from "lucide-react"
+import { ExternalLink, Trash2, Plus, ListIcon, ChevronDown } from "lucide-react"
 import { useToast } from "@/components/ui/use-toast"
 import { Header } from "@/components/header"
 import { useFeedStore } from "@/lib/store"
 import { feedSuggestions } from "@/lib/suggestions"
+import Link from "next/link"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 
 export default function FeedsPage() {
@@ -184,49 +185,61 @@ export default function FeedsPage() {
 
             <div>
               <h2 className="text-2xl font-bold mb-4">Suggested Feeds</h2>
-              <Accordion type="single" collapsible className="w-full">
+              <Accordion type="multiple" className="space-y-4">
                 {feedSuggestions.map((category, index) => (
-                  <AccordionItem key={category.name} value={`category-${index}`}>
-                    <AccordionTrigger className="text-lg font-semibold">
-                      {category.name}
+                  <AccordionItem key={category.name} value={category.name} className="border rounded-lg px-6">
+                    <AccordionTrigger className="hover:no-underline">
+                      <div className="flex flex-col items-start gap-1">
+                        <h3 className="text-lg font-semibold">{category.name}</h3>
+                        <p className="text-sm text-muted-foreground font-normal">
+                          {category.description}
+                        </p>
+                      </div>
                     </AccordionTrigger>
                     <AccordionContent>
-                      <p className="text-muted-foreground mb-4">{category.description}</p>
-                      <div className="grid gap-2">
-                        {category.feeds.map((feed) => (
-                          <Card key={feed.url}>
-                            <CardHeader className="p-4">
-                              <div className="flex items-center justify-between">
-                                <div>
-                                  <CardTitle className="text-base">{feed.name}</CardTitle>
-                                  <CardDescription className="truncate text-xs">
-                                    {feed.url}
-                                  </CardDescription>
-                                </div>
-                                <div className="flex gap-2">
+                      <div className="overflow-x-auto pb-4 pt-2">
+                        <div className="flex gap-4" style={{ minWidth: 'min-content' }}>
+                          {category.feeds.map((feed) => (
+                            <Card key={feed.url} className="group hover:border-primary/50 transition-colors w-[300px] shrink-0">
+                              <CardHeader className="p-4">
+                                <div className="space-y-4">
+                                  <div className="min-w-0">
+                                    <CardTitle className="text-base mb-1 flex items-center gap-2">
+                                      {feed.name}
+                                      <a
+                                        href={feed.url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="text-muted-foreground hover:text-primary opacity-0 group-hover:opacity-100 transition-opacity"
+                                      >
+                                        <ExternalLink className="h-4 w-4" />
+                                      </a>
+                                    </CardTitle>
+                                    <CardDescription className="truncate text-xs">
+                                      {feed.url}
+                                    </CardDescription>
+                                  </div>
                                   <Button
                                     variant="outline"
-                                    size="icon"
+                                    size="sm"
                                     onClick={() => handleAddSuggestedFeed(feed.name, feed.url)}
                                     disabled={isLoading === feed.url || feeds.some(f => f.url === feed.url)}
+                                    className="w-full"
                                   >
-                                    <Plus className="h-4 w-4" />
-                                    <span className="sr-only">Add feed</span>
+                                    {feeds.some(f => f.url === feed.url) ? (
+                                      <span className="text-xs text-muted-foreground">Added</span>
+                                    ) : (
+                                      <>
+                                        <Plus className="h-4 w-4 mr-1" />
+                                        <span className="text-xs">Add Feed</span>
+                                      </>
+                                    )}
                                   </Button>
-                                  <a
-                                    href={feed.url}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="text-muted-foreground hover:text-primary"
-                                  >
-                                    <ExternalLink className="h-4 w-4" />
-                                    <span className="sr-only">Open feed</span>
-                                  </a>
                                 </div>
-                              </div>
-                            </CardHeader>
-                          </Card>
-                        ))}
+                              </CardHeader>
+                            </Card>
+                          ))}
+                        </div>
                       </div>
                     </AccordionContent>
                   </AccordionItem>
@@ -234,6 +247,23 @@ export default function FeedsPage() {
               </Accordion>
             </div>
           </div>
+
+          {/* Add padding at the bottom to account for the sticky button */}
+          <div className="h-32"></div>
+
+          {/* Sticky Continue Button */}
+          {feeds.length > 0 && (
+            <div className="fixed bottom-0 left-0 right-0 p-4 bg-background/80 backdrop-blur-sm border-t z-10">
+              <div className="container mx-auto flex justify-center">
+                <Link href="/summaries">
+                  <Button size="lg" className="gap-2 px-8 py-6 text-lg shadow-lg">
+                    <ListIcon className="h-5 w-5" />
+                    Continue to Summaries
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          )}
         </div>
       </main>
     </div>
