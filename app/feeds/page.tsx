@@ -218,6 +218,22 @@ export default function FeedsPage() {
                             <Card key={feed.url} className="group hover:border-primary/50 transition-colors w-[300px] shrink-0">
                               <CardHeader className="p-4">
                                 <div className="space-y-4">
+                                  <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => handleAddSuggestedFeed(feed.name, feed.url)}
+                                    disabled={isLoading === feed.url || feeds.some(f => f.url === feed.url)}
+                                    className="w-full mb-4"
+                                  >
+                                    {feeds.some(f => f.url === feed.url) ? (
+                                      <span className="text-xs text-muted-foreground">Added</span>
+                                    ) : (
+                                      <>
+                                        <Plus className="h-4 w-4 mr-1" />
+                                        <span className="text-xs">Add Feed</span>
+                                      </>
+                                    )}
+                                  </Button>
                                   <div className="min-w-0">
                                     <CardTitle className="text-base mb-1 flex items-center gap-2">
                                       {feed.name}
@@ -234,22 +250,6 @@ export default function FeedsPage() {
                                       {feed.url}
                                     </CardDescription>
                                   </div>
-                                  <Button
-                                    variant="outline"
-                                    size="sm"
-                                    onClick={() => handleAddSuggestedFeed(feed.name, feed.url)}
-                                    disabled={isLoading === feed.url || feeds.some(f => f.url === feed.url)}
-                                    className="w-full"
-                                  >
-                                    {feeds.some(f => f.url === feed.url) ? (
-                                      <span className="text-xs text-muted-foreground">Added</span>
-                                    ) : (
-                                      <>
-                                        <Plus className="h-4 w-4 mr-1" />
-                                        <span className="text-xs">Add Feed</span>
-                                      </>
-                                    )}
-                                  </Button>
                                 </div>
                               </CardHeader>
                             </Card>
