@@ -110,7 +110,7 @@ function SummaryList({ summaries }: { summaries: any[] }) {
                     className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
                   >
                     <ExternalLink className="h-3 w-3" />
-                    {props.children}
+                    (link)
                   </a>
                 ),
               }}
@@ -158,7 +158,6 @@ export default function SummariesPage() {
     try {
       const { feeds } = useFeedStore.getState()
       const newSummaries = await fetchAndSummarizeFeed(feeds)
-      console.log("New summaries fetched:", newSummaries);
       
       // Update the summaries state with all new summaries
       setSummaries(prev => ({
