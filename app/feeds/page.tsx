@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { ExternalLink, Trash2, Plus, ListIcon, ChevronDown } from "lucide-react"
+import { ExternalLink, Trash2, Plus, ListIcon, ChevronDown, RefreshCw } from "lucide-react"
 import { useToast } from "@/components/ui/use-toast"
 import { Header } from "@/components/header"
 import { useFeedStore } from "@/lib/store"
@@ -131,8 +131,23 @@ export default function FeedsPage() {
                 </div>
               </CardContent>
               <CardFooter>
-                <Button type="submit" disabled={isLoading === "manual"}>
-                  {isLoading === "manual" ? "Adding..." : "Add Feed"}
+                <Button 
+                  type="submit" 
+                  disabled={isLoading === "manual"}
+                  className="w-full sm:w-auto h-12 text-base"
+                  size="lg"
+                >
+                  {isLoading === "manual" ? (
+                    <div className="flex items-center gap-2">
+                      <RefreshCw className="h-4 w-4 animate-spin" />
+                      Adding...
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-2">
+                      <Plus className="h-5 w-5" />
+                      Add Feed
+                    </div>
+                  )}
                 </Button>
               </CardFooter>
             </form>
